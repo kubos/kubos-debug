@@ -33,7 +33,10 @@ def hello_world():
 
 @app.route('/run', methods=['POST'])
 def run():
-    ser = serialconn.open()
+    try:
+        ser = serialconn.open()
+    except:
+        return "Failed to open serial port", 404
     req_json = request.get_json()
     req_cmd = req_json.get('command')
     req_dir = req_json.get('dir')
@@ -50,7 +53,10 @@ def run():
 
 @app.route('/flash', methods=['POST'])
 def flash():
-    ser = serialconn.open()
+    try:
+        ser = serialconn.open()
+    except:
+        return "Failed to open serial port", 404
     req_json = request.get_json()
     req_file = req_json.get('file')
     req_dir = req_json.get('dir')

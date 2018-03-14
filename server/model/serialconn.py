@@ -3,7 +3,7 @@ import os
 import sys
 from time import sleep
 
-SERIAL_DEV = "/dev/FTDI"
+SERIAL_DEV = "/dev/ttyUSB0"
 SERIAL_SPEED = 115200
 
 def send_read_line(ser, cmd):
