@@ -2,6 +2,7 @@ from flask import Flask, request
 from model import serialconn
 import click
 import os, pwd, grp
+import json
 
 UPLOAD_FOLDER = '/tmp/kubos_debug/uploads'
 
@@ -55,23 +56,31 @@ def run():
 
 @app.route('/flash', methods=['POST'])
 def flash():
-    print(request)
+    uploaded_files = request.files.getlist("file")
     if 'file' not in request.files:
         return 'Please upload file', 404
+        
     file = request.files['file']
     if file.filename == '':
         return 'Please upload with filename', 404
+
     filename = file.filename
     req_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(req_file)
+
+    req_dir = ""
+    if 'json' not in request.files:
+        req_dir = "/home/system/usr/local/bin"
+    else:
+        json_file = request.files['json']
+        json_data = json.loads(json_file.read().decode('utf8'))
+        req_dir = json_data['dir']
 
     try:
         ser = serialconn.open()
     except:
         return "Failed to open serial port", 404
-    req_json = request.get_json()
-    #req_file = req_json.get('file')
-    req_dir = req_json.get('dir')
+
     if req_file:
         if serialconn.login(ser, "kubos", "Kubos123"):
             if req_dir is None:
