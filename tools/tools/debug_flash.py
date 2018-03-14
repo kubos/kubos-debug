@@ -10,12 +10,20 @@ def main():
 
     args = parser.parse_args()
 
-    data = { 'file' : args.file }
+    try:
+        files = { 'file' : open(args.file, 'rb') }
+    except:
+        print "No file found"
+        return
+
+    data = { }
 
     if args.dir != None:
         data['dir'] = args.dir
 
-    r = requests.post('http://192.168.1.205:8000/flash', json=data)
+    print files
+
+    r = requests.post('http://127.0.0.1:5000/flash', files=files, json=data)
 
     print r.text
 

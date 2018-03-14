@@ -3,8 +3,10 @@ from model import serialconn
 import click
 import os, pwd, grp
 
+UPLOAD_FOLDER = '/tmp/kubos_debug/uploads'
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #Throws OSError exception (it will be thrown when the process is not allowed
 #to switch its effective UID or GID):
@@ -53,12 +55,22 @@ def run():
 
 @app.route('/flash', methods=['POST'])
 def flash():
+    print(request)
+    if 'file' not in request.files:
+        return 'Please upload file', 404
+    file = request.files['file']
+    if file.filename == '':
+        return 'Please upload with filename', 404
+    filename = file.filename
+    req_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(req_file)
+
     try:
         ser = serialconn.open()
     except:
         return "Failed to open serial port", 404
     req_json = request.get_json()
-    req_file = req_json.get('file')
+    #req_file = req_json.get('file')
     req_dir = req_json.get('dir')
     if req_file:
         if serialconn.login(ser, "kubos", "Kubos123"):
@@ -73,5 +85,4 @@ def runcmd():
     click.echo("Running test comand")
 
 if __name__ == '__main__':
-    print("hello main")
     app.run(host='0.0.0.0')
