@@ -2,6 +2,7 @@ import serial
 import os
 import sys
 from time import sleep
+import subprocess
 
 SERIAL_DEV = "/dev/ttyUSB0"
 SERIAL_SPEED = 115200
@@ -27,11 +28,39 @@ def wait_on_string(ser, string):
 
 def send_file(ser, local_file, remote_folder):
     ser.write(("cd %s\n" % remote_folder).encode())
-    #ser.write(("rz -w 8192\n").encode())
-    #ser.close()
     os.system("stty -F %s %s" % (SERIAL_DEV, SERIAL_SPEED))
-    os.system("sz -ybU -w 8192 %s > %s < %s" % (local_file, SERIAL_DEV, SERIAL_DEV))
-    #os.system("sz %s" % local_file)
+    #os.system("sz -ybU -w 8192 %s > %s < %s" % (local_file, SERIAL_DEV, SERIAL_DEV))
+    #output = subprocess.call("sz -ybU -w 8192 %s > %s < %s" % (local_file, SERIAL_DEV, SERIAL_DEV), shell=True)
+    #print(output)
+
+
+    cmd = ["sz", "-ybU", "-w", "8192", local_file, ">", SERIAL_DEV, "<", SERIAL_DEV]
+    print(cmd)
+    p = subprocess.Popen("sz -ybU -w 8192 %s > %s < %s" % (local_file, SERIAL_DEV, SERIAL_DEV), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return p
+    # while True:
+    #     output = p.stderr.readline()
+    #     if output == '' and p.poll() is not None:
+    #         break
+    #     if output:
+    #         print("output")
+    #         print(output.strip())
+    #print(p.communicate())
+    # output = subprocess.check_output(cmd)
+    # print(output)
+
+    # process = subprocess.Popen(
+    #     #"sz -ybU -w 8192 %s > %s < %s" % (local_file, SERIAL_DEV, SERIAL_DEV),
+    #     cmd,
+    #     stdout=subprocess.PIPE
+    # )
+    # while True:
+    #     output = process.stdout.readline()
+    #     if output == '' and process.poll() is not None:
+    #         break
+    #     if output:
+    #         print(output.strip())
 
 def login(ser, user, password):
     send_read_line(ser, "")

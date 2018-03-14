@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import stream_with_context, Flask, request, Response
 from model import serialconn
 import click
 import os, pwd, grp
@@ -59,7 +59,7 @@ def flash():
     uploaded_files = request.files.getlist("file")
     if 'file' not in request.files:
         return 'Please upload file', 404
-        
+
     file = request.files['file']
     if file.filename == '':
         return 'Please upload with filename', 404
@@ -85,8 +85,23 @@ def flash():
         if serialconn.login(ser, "kubos", "Kubos123"):
             if req_dir is None:
                 req_dir = "/home/system/usr/local/bin"
-            serialconn.send_file(ser, req_file, req_dir)
-            return "Transfer of %s complete" % req_file, 200
+            p = serialconn.send_file(ser, req_file, req_dir)
+            def generate(p):
+                #while True:
+                    # output = p.stderr.readline()
+                    # if output == '' and p.poll() is not None:
+                    #     break
+                    # if output:
+                    #     print("output %s" % output.strip())
+                    #     yield output.strip()
+                for stderr_line in iter(p.stderr.readline, ""):
+                    if stderr_line == b'':
+                        break
+                    yield stderr_line
+                    print("output %s" % stderr_line)
+                p.stdout.close()
+                p.stderr.close()
+            return Response(generate(p))
     return '', 200
 
 @app.cli.command()

@@ -25,7 +25,6 @@ def main():
         data['dir'] = args.dir
         files['json'] = ('json', json.dumps(data), 'application/json')
 
-    print files
     r = requests.post(
         'http://192.168.1.205:8000/flash',
         files = files
