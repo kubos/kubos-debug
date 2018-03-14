@@ -23,7 +23,7 @@ def main():
 
     print files
 
-    r = requests.post('http://127.0.0.1:5000/flash', files=files, json=data)
+    r = requests.post('http://192.168.1.205:8000/flash', files=files, json=data)
 
     print r.text
 
