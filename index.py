@@ -59,6 +59,7 @@ def flash():
             if req_dir is None:
                 req_dir = "/home/system/usr/local/bin"
             serialconn.send_file(ser, req_file, req_dir)
+            return "Transfer of %s complete" % req_file, 200
     return '', 200
 
 @app.cli.command()

@@ -1,10 +1,11 @@
+#
+# curl -X POST -H "Content-Type: application/json" -d '{
+#   "file": "/vagrant/hexes",
+#   "dir": "/home/kubos"
+# }' http://localhost:8000/flash
+
 
 curl -X POST -H "Content-Type: application/json" -d '{
-  "file": "/vagrant/Vagrantfile",
+  "command": "ps",
   "dir": "/home/kubos"
-}' http://localhost:5000/flash
-
-curl -X POST -H "Content-Type: application/json" -d '{
-  "command": "cat Vagrantfile",
-  "dir": "/home/kubos"
-}' http://localhost:5000/run
+}' http://localhost:8000/run
