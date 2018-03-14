@@ -15,6 +15,9 @@ def main():
     if args.dir != None:
         data['dir'] = args.dir
 
-    r = requests.post('http://192.168.1.205:8000/run', data)
+    r = requests.post('http://192.168.1.205:8000/run', json=data)
 
     print r.text
+
+if __name__ == '__main__':
+    main()
