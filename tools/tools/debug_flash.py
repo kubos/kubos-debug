@@ -4,6 +4,9 @@ import requests
 import argparse
 import json
 import os
+import config
+
+FLASH_URL = "%s/flash" % config.URL
 
 def main():
     parser = argparse.ArgumentParser(description='Sends file to remote device')
@@ -25,10 +28,11 @@ def main():
         data['dir'] = args.dir
         files['json'] = ('json', json.dumps(data), 'application/json')
 
-    r = requests.post(
-        'http://192.168.1.205:8000/flash',
-        files = files
-    )
+    try:
+        r = requests.post(FLASH_URL, files = files)
+    except:
+        print "Could not connect to server"
+        return
 
     print r.text
 

@@ -1,4 +1,3 @@
 #!/bin/bash
-export FLASK_APP=./index.py
-source $(pipenv --venv)/bin/activate
-flask run -h 0.0.0.0:8080
+
+gunicorn index:app -b 0.0.0.0:52861 -t 360

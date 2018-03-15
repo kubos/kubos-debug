@@ -2,6 +2,9 @@
 
 import requests
 import argparse
+import config
+
+RUN_URL = "%s/run" % config.URL
 
 def main():
     parser = argparse.ArgumentParser(description='Run some remote commmand')
@@ -15,7 +18,11 @@ def main():
     if args.dir != None:
         data['dir'] = args.dir
 
-    r = requests.post('http://192.168.1.205:8000/run', json=data)
+    try:
+        r = requests.post(RUN_URL, json=data)
+    except:
+        print "Could not connect to server"
+        return
 
     print r.text
 
