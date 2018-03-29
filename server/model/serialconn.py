@@ -4,7 +4,7 @@ import sys
 from time import sleep
 import subprocess
 
-SERIAL_DEV = "/dev/ttyUSB0"
+SERIAL_DEV = "/dev/ttyIOBC"
 SERIAL_SPEED = 115200
 
 def send_read_line(ser, cmd):

@@ -44,7 +44,7 @@ def run():
     req_cmd = req_json.get('command')
     req_dir = req_json.get('dir')
     if req_cmd:
-        if serialconn.login(ser, "kubos", "Kubos123"):
+        if serialconn.login(ser, "root", "Kubos123"):
             # Change dir if requested
             if req_dir:
                 cmd = "cd %s" % req_dir
@@ -82,7 +82,7 @@ def flash():
         return "Failed to open serial port", 404
 
     if req_file:
-        if serialconn.login(ser, "kubos", "Kubos123"):
+        if serialconn.login(ser, "root", "Kubos123"):
             if req_dir is None:
                 req_dir = "/home/system/usr/local/bin"
             p = serialconn.send_file(ser, req_file, req_dir)
