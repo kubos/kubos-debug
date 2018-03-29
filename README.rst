@@ -50,7 +50,7 @@ Running the tools
 The tools communicate with the server over HTTP to send their command and receive the response. The tools must be run in an environment where they can reach the server.
 
 The server could be running locally or on a shared machine.
-Specifying the server ip/port is done through a local configuration file. Right now the tools look for that config file at `/home/vagrant/.kubos/config.yml`. The config file currently has just two options, IP and PORT. 
+Specifying the server ip/port is done through a local configuration file. Right now the tools look for that config file at ``/home/vagrant/.kubos/debug.yml``. The config file currently has just two options, IP and PORT. 
 
 Example:
 
